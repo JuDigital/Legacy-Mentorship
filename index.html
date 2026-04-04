@@ -1091,14 +1091,53 @@ function saveAll(){
     var msg=document.getElementById(id);if(msg){msg.style.display='block';setTimeout(function(){msg.style.display='none';},2000);}
   });
 }
+// ── DEFAULT DATA — Ju's hardcoded events & notes ──
+var DEFAULT_EVTS = [
+  {id:1001, name:'Mentorship Payment Due', day:6,  month:3, year:2026, color:'ev-pink'},
+  {id:1002, name:'Open Reading Date',      day:11, month:3, year:2026, color:'ev-purple'},
+  {id:1003, name:'Open Reading Date',      day:11, month:3, year:2026, color:'ev-purple'},
+  {id:1004, name:'Summer Solstice Group Ritual', day:18, month:3, year:2026, color:'ev-green'}
+];
+var DEFAULT_NOTES = {
+  home:[],
+  thismonth:[
+    {id:2001, author:'ju', label:'April Ritual Details', text:'For our ritual, we will do earlier in the day around 1:30 pm - 2:45pm you will need a bouquet of your favorite flowers, a petition for new energy. What ever that means to you... more spiritual energy, more creative energy or generating more income. Herbs we will use: Roses , rosemary, cinnamon, lavender and (or a few petals from your bouquet) , self love oil, money oil, protection oil (high john oil if you have it)'}
+  ],
+  reading:[],
+  arch:[]
+};
+var DEFAULT_YEAREVTS = [
+  {id:3001, name:'Mentorship Payment Due', month:3, day:6,  color:'yev-pink'},
+  {id:3002, name:'Open Reading Date',      month:3, day:11, color:'yev-purple'},
+  {id:3003, name:'Open Reading Date',      month:3, day:11, color:'yev-purple'},
+  {id:3004, name:'Summer Solstice Group Ritual', month:3, day:18, color:'yev-green'}
+];
+
 function loadAll(){
-  try{calEvts=JSON.parse(localStorage.getItem('legacy_evts')||'[]');}catch(e){}
-  try{var n=JSON.parse(localStorage.getItem('legacy_notes')||'{}');
-    if(Array.isArray(n)){notes.thismonth=n;}else{notes=Object.assign({home:[],thismonth:[],reading:[],arch:[]},n);}
-  }catch(e){}
-  try{yearEvents=JSON.parse(localStorage.getItem('legacy_yearevts')||'[]');}catch(e){}
-  try{yearNotes=JSON.parse(localStorage.getItem('legacy_yearnotes')||'[]');}catch(e){}
-  try{archive=JSON.parse(localStorage.getItem('legacy_archive')||'[]');}catch(e){}
+  // Load saved data from localStorage
+  var savedEvts      = null;
+  var savedNotes     = null;
+  var savedYearEvts  = null;
+  var savedYearNotes = null;
+  var savedArchive   = null;
+  try{savedEvts=JSON.parse(localStorage.getItem('legacy_evts'));}catch(e){}
+  try{savedNotes=JSON.parse(localStorage.getItem('legacy_notes'));}catch(e){}
+  try{savedYearEvts=JSON.parse(localStorage.getItem('legacy_yearevts'));}catch(e){}
+  try{savedYearNotes=JSON.parse(localStorage.getItem('legacy_yearnotes'));}catch(e){}
+  try{savedArchive=JSON.parse(localStorage.getItem('legacy_archive'));}catch(e){}
+
+  // Merge defaults with any user-saved data
+  calEvts = savedEvts && savedEvts.length ? savedEvts : DEFAULT_EVTS.slice();
+  if(savedNotes){
+    if(Array.isArray(savedNotes)){notes.thismonth=savedNotes;}
+    else{notes=Object.assign({home:[],thismonth:[],reading:[],arch:[]},savedNotes);}
+  } else {
+    notes = JSON.parse(JSON.stringify(DEFAULT_NOTES));
+  }
+  yearEvents = savedYearEvts && savedYearEvts.length ? savedYearEvts : DEFAULT_YEAREVTS.slice();
+  yearNotes  = savedYearNotes || [];
+  archive    = savedArchive   || [];
+
   renderEvtList();renderAllNotes();renderArchive();buildYearGrid();renderYearNotes();
   loadPersonal();
 }
