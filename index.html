@@ -1126,42 +1126,41 @@ async function saveAll(){
 }
 
 async function loadAll(){
-  // Load local first for instant render
+  // Always load from Firebase first — ignore local cache
   try{
-    var local=JSON.parse(localStorage.getItem('legacy_local')||'null');
-    if(local) applyData(local);
-    else{
-      try{calEvts=JSON.parse(localStorage.getItem('legacy_evts')||'[]');}catch(e){}
-      try{var n=JSON.parse(localStorage.getItem('legacy_notes')||'{}');
-        if(Array.isArray(n)){notes.thismonth=n;}else{notes=Object.assign({home:[],thismonth:[],reading:[],arch:[]},n);}
-      }catch(e){}
-      try{yearEvents=JSON.parse(localStorage.getItem('legacy_yearevts')||'[]');}catch(e){}
-      try{yearNotes=JSON.parse(localStorage.getItem('legacy_yearnotes')||'[]');}catch(e){}
-      try{archive=JSON.parse(localStorage.getItem('legacy_archive')||'[]');}catch(e){}
-    }
-  }catch(e){}
-  renderEvtList();renderAllNotes();renderArchive();buildYearGrid();renderYearNotes();
-  loadPersonal();
-  // Then fetch fresh from Firebase and re-render
-  try{
-    var resp=await fetch(FIREBASE_URL+'/shared.json');
+    var resp=await fetch(FIREBASE_URL+'/shared.json?t='+Date.now());
     if(resp.ok){
       var d=await resp.json();
       if(d&&d.v){
         applyData(d);
         localStorage.setItem('legacy_local',JSON.stringify(d));
-        renderEvtList();renderAllNotes();renderArchive();buildYearGrid();renderYearNotes();
       }
     }
-  }catch(e){}
-  // Load personal from Firebase too
+  }catch(e){
+    // Firebase failed, fall back to local
+    try{
+      var local=JSON.parse(localStorage.getItem('legacy_local')||'null');
+      if(local) applyData(local);
+      else{
+        try{calEvts=JSON.parse(localStorage.getItem('legacy_evts')||'[]');}catch(e){}
+        try{var n=JSON.parse(localStorage.getItem('legacy_notes')||'{}');
+          if(Array.isArray(n)){notes.thismonth=n;}else{notes=Object.assign({home:[],thismonth:[],reading:[],arch:[]},n);}
+        }catch(e){}
+        try{yearEvents=JSON.parse(localStorage.getItem('legacy_yearevts')||'[]');}catch(e){}
+        try{yearNotes=JSON.parse(localStorage.getItem('legacy_yearnotes')||'[]');}catch(e){}
+        try{archive=JSON.parse(localStorage.getItem('legacy_archive')||'[]');}catch(e){}
+      }
+    }catch(e){}
+  }
+  // Load personal from Firebase
   try{
-    var rn=await fetch(FIREBASE_URL+'/personal/naima.json');
+    var rn=await fetch(FIREBASE_URL+'/personal/naima.json?t='+Date.now());
     if(rn.ok){var dn=await rn.json();if(dn)personalData.naima=dn;}
-    var ra=await fetch(FIREBASE_URL+'/personal/asha.json');
+    var ra=await fetch(FIREBASE_URL+'/personal/asha.json?t='+Date.now());
     if(ra.ok){var da=await ra.json();if(da)personalData.asha=da;}
-    loadPersonal();
   }catch(e){}
+  renderEvtList();renderAllNotes();renderArchive();buildYearGrid();renderYearNotes();
+  loadPersonal();
 }
 
 // READING QUIZ
