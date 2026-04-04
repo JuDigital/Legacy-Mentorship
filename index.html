@@ -75,13 +75,14 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
 .cal-wdow{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-align:center;padding:4px 0;}
 .cal-wday{background:var(--bg3);border-radius:6px;min-height:70px;padding:5px;display:flex;flex-direction:column;gap:2px;}
 .cal-wday.wempty{background:transparent;}
-.cal-wday.wtoday{outline:1px solid var(--purple-border);}
+.cal-wday.wtoday{background:rgba(251,191,36,0.12);border-color:rgba(251,191,36,0.35);}
 .cal-wday-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);font-weight:500;margin-bottom:1px;}
-.cal-wday.wtoday .cal-wday-num{color:var(--purple);}
+.cal-wday.wtoday .cal-wday-num{color:#fbbf24;font-weight:800;}
 .cal-wevent{font-size:9px;border-radius:3px;padding:2px 4px;line-height:1.35;font-weight:500;word-break:break-word;}
 .ev-purple{background:var(--purple-bg);color:var(--purple);}
 .ev-pink{background:var(--pink-bg);color:var(--pink);}
 .ev-green{background:var(--green-bg);color:var(--green);}
+.ev-blank{background:rgba(255,255,255,0.07);color:var(--txt);border-left:2px solid rgba(255,255,255,0.2);}
 
 /* SECTIONS */
 .page{max-width:900px;margin:0 auto;padding:40px 24px;}
@@ -237,17 +238,23 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
 
 /* YEAR CALENDAR */
 .year-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-bottom:28px;}
-.month-block{background:var(--bg2);border:0.5px solid var(--bord);border-radius:var(--radius);overflow:hidden;}
+.month-block{background:var(--bg2);border:0.5px solid var(--bord);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;}
 .month-block-hdr{padding:10px 14px;border-bottom:0.5px solid var(--bord);display:flex;align-items:center;justify-content:space-between;}
 .month-block-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.1em;color:var(--purple);}
 .month-mini-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:8px;}
 .mmday-hdr{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-align:center;padding:2px 0;}
 .mmday{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-align:center;padding:3px 1px;border-radius:4px;cursor:pointer;position:relative;min-height:20px;display:flex;align-items:center;justify-content:center;transition:background 0.15s;}
 .mmday:hover{background:var(--surf2);color:var(--txt);}
-.mmday.today{background:transparent;color:#fff;font-weight:800;outline:none;box-shadow:0 0 0 2px #ef4444,0 0 0 3.5px #fbbf24;border-radius:50%;z-index:1;position:relative;}
-.mmday.today .mmday-dot{bottom:-1px;}
+.mmday.today{background:rgba(251,191,36,0.28);color:#fbbf24;font-weight:800;border-radius:4px;z-index:1;position:relative;}
+.mmday.today .mmday-dot{bottom:1px;}
 .mmday.has-events{font-weight:700;color:var(--txt);}
 .mmday-dot{position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;}
+/* Month event list below the mini grid */
+.month-evt-list{border-top:0.5px solid var(--bord);padding:6px 8px;display:flex;flex-direction:column;gap:3px;}
+.month-evt-row{display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:5px;font-size:11px;line-height:1.3;}
+.month-evt-day{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);min-width:22px;flex-shrink:0;}
+.month-evt-name{flex:1;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.month-evt-bar{width:3px;border-radius:2px;height:22px;flex-shrink:0;}
 
 /* YEAR EVENT COLORS */
 .yev-pink{background:var(--pink-bg);color:var(--pink);border-left:2px solid var(--pink);}
@@ -268,7 +275,35 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
 .drawer-ev-del:hover{color:var(--pink);}
 .drawer-add{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
 
-/* YEAR NOTES */
+/* PERSONAL PANEL CALENDAR */
+.personal-cal{background:var(--bg3);border:0.5px solid var(--bord2);border-radius:var(--radius);overflow:hidden;margin-bottom:24px;}
+.personal-cal-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid var(--bord);}
+.personal-cal-title{font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.08em;}
+.personal-cal-nav{display:flex;gap:4px;}
+.personal-cal-nav button{font-family:'DM Mono',monospace;font-size:10px;background:transparent;color:var(--muted);border:0.5px solid var(--bord2);border-radius:5px;padding:3px 10px;cursor:pointer;}
+.personal-cal-nav button:hover{color:var(--txt);}
+.personal-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:8px;}
+.pcal-dow{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-align:center;padding:2px 0;}
+.pcal-day{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-align:center;padding:3px 2px;border-radius:4px;cursor:pointer;min-height:22px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;transition:background 0.15s;position:relative;}
+.pcal-day:hover{background:var(--surf2);color:var(--txt);}
+.pcal-day.pcal-today{background:rgba(251,191,36,0.25);color:#fbbf24;font-weight:800;}
+.pcal-day.pcal-has-evt{color:var(--txt);font-weight:700;}
+.pcal-dot{width:4px;height:4px;border-radius:50%;margin:0 auto;}
+.personal-cal-evt-list{padding:8px 10px;border-top:0.5px solid var(--bord);display:flex;flex-direction:column;gap:5px;}
+.pcal-evt-item{display:flex;align-items:center;gap:8px;font-size:11px;padding:4px 6px;border-radius:5px;}
+.pcal-evt-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.pcal-evt-name{flex:1;color:var(--txt);}
+.pcal-evt-date{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.pcal-evt-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;}
+.pcal-evt-del:hover{color:var(--pink);}
+
+/* DRAGGABLE NOTES */
+.drag-handle{cursor:grab;color:var(--muted);font-size:14px;padding:0 4px;user-select:none;flex-shrink:0;}
+.drag-handle:active{cursor:grabbing;}
+.note-card.dragging{opacity:0.45;border-style:dashed;}
+.note-card.drag-over-top{border-top:2px solid var(--purple);}
+.note-card.drag-over-bottom{border-bottom:2px solid var(--purple);}
+.notes-list-wrap{display:flex;flex-direction:column;gap:0;}
 .year-note-card{background:var(--bg2);border:0.5px solid var(--bord);border-radius:var(--radius);overflow:hidden;margin-bottom:10px;}
 .year-note-hdr{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:0.5px solid var(--bord);gap:8px;}
 .year-note-author{font-family:'DM Mono',monospace;font-size:10px;padding:3px 10px;border-radius:999px;flex-shrink:0;}
@@ -315,11 +350,11 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
   </a>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchTab('home',this)">Home</button>
-    <button class="nav-tab" onclick="switchTab('thismonth',this)">This Month</button>
+    <button class="nav-tab" id="thisMonthTab" onclick="switchTab('thismonth',this)">This Month</button>
     <button class="nav-tab" onclick="switchTab('ouryear',this)">Our Year</button>
     <button class="nav-tab" onclick="switchTab('archive',this)">Archive</button>
     <button class="nav-tab" onclick="switchTab('reading',this)">Reading Prep</button>
-    <button class="nav-tab nav-tab-naima" onclick="openPersonalPage('naima')">🌸 Naima</button>
+    <button class="nav-tab nav-tab-naima" onclick="openPersonalPage('naima')">🧿 Naima</button>
     <button class="nav-tab nav-tab-asha" onclick="openPersonalPage('asha')">✨ Asha</button>
     <button class="nav-tab" onclick="switchTab('payment',this)">Payment</button>
   </div>
@@ -351,15 +386,17 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
   <div class="page">
     <div class="hero">
       <div class="hero-orb"></div>
-      <div class="hero-eyes">✨ 🌸 ✨</div>
+      <div class="hero-eyes">✨ 🧿 ✨</div>
       <h1 class="hero-title">
         <span style="color:var(--pink);">Welcome Home,</span><br>
         <span style="color:var(--purple);">Legacy Circle</span>
       </h1>
-      <div class="hero-names">
-        <span style="color:var(--pink);">Naima Aura</span> &nbsp;&amp;&nbsp; <span style="color:var(--green);">Asha Ase</span>
-      </div>
       <div class="message-card">
+        <div style="display:flex;justify-content:center;gap:18px;margin-bottom:16px;">
+          <span style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.08em;color:var(--pink);">🧿 Naima Aura</span>
+          <span style="color:var(--bord2);">·</span>
+          <span style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.08em;color:var(--green);">✨ Asha Ase</span>
+        </div>
         <div class="msg-eyebrow">✨ A Message From Ju ✨</div>
         <div class="msg-scripture">"Well done, good and faithful servant. You have been faithful with a few things; I will put you in charge of many things. Come and share your master's happiness."</div>
         <div class="msg-ref">Matthew 25:21</div>
@@ -376,32 +413,32 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
       <div class="review-card" style="border-color:var(--pink-border);">
         <div class="review-stars">⭐⭐⭐⭐⭐</div>
         <div class="review-text">"Ju is a God send. <span class="rhl">The ancestor readings she offers ain't no joke. Words cannot express the feelings you get when you experience her readings.</span> It is more than a transaction for her. Such a beautiful soul."</div>
-        <div class="review-author">Lawanda Bailey &nbsp;·&nbsp; Ancestor Reading + Group Rituals</div>
+        <div class="review-author">L. Bailey</div>
       </div>
       <div class="review-card" style="border-color:var(--purple-border);">
         <div class="review-stars">⭐⭐⭐⭐⭐</div>
         <div class="review-text">"She is NO CAP. My life has done a complete 180 in only 6 to 7 months. <span class="rhlp">I thought I had already healed certain things but I learned I had barely scratched the surface. My life is so much better. You cannot go wrong with her.</span>"</div>
-        <div class="review-author">LaTasha Ledbetter &nbsp;·&nbsp; Reading + Mentorship Program</div>
+        <div class="review-author">L. Ledbetter</div>
       </div>
       <div class="review-card" style="border-color:var(--green-border);">
         <div class="review-stars">⭐⭐⭐⭐⭐</div>
         <div class="review-text">"100% authentic and effective. She is self-made, the true definition of what you see is what you get. <span class="rhlg">This is the place where all your dreams come alive.</span> Have no fear, Master Manifestor is here."</div>
-        <div class="review-author">Resilience Babe &nbsp;·&nbsp; Spiritual Services</div>
+        <div class="review-author">Resilience Babe</div>
       </div>
       <div class="review-card" style="border-color:var(--purple-border);">
         <div class="review-stars">⭐⭐⭐⭐⭐</div>
         <div class="review-text">"Her knowledge of her gift and craft is beyond her years. <span class="rhlp">I have grown tremendously being in her Mentorship Program.</span> She instructs with so much empathy and compassion. She has a heart for helping people."</div>
-        <div class="review-author">Mrs. Shirley Hunt &nbsp;·&nbsp; Mentorship Program</div>
+        <div class="review-author">S. Hunt</div>
       </div>
       <div class="review-card" style="border-color:var(--pink-border);">
         <div class="review-stars">⭐⭐⭐⭐⭐</div>
         <div class="review-text">"The place I was in had me ready to give up on life. <span class="rhl">Because I reached out, I was given insight that is still keeping me fighting. She spoke things I had never told anyone.</span> It opened my eyes completely."</div>
-        <div class="review-author">Marquita Warren &nbsp;·&nbsp; Reading + Guidance</div>
+        <div class="review-author">M. Warren</div>
       </div>
       <div class="review-card" style="border-color:var(--green-border);">
         <div class="review-stars">⭐⭐⭐⭐⭐</div>
         <div class="review-text">"She never misses. She is TOP TIER in everything. <span class="rhlg">Give her a chance and she will make your life better and pour pure love inside of you.</span> I am not just saying this. Pure facts."</div>
-        <div class="review-author">Brittney Kidd &nbsp;·&nbsp; Lifelong Client</div>
+        <div class="review-author">B. Kidd</div>
       </div>
     </div>
     <div class="section-label" style="margin-top:40px;">Home Notes</div>
@@ -423,8 +460,8 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
 <div class="tab-panel" id="tab-thismonth">
   <div class="page">
     <div class="section-label">Updated by Ju Monthly</div>
-    <h2 class="section-title">This Month</h2>
-    <div class="section-sub">Your schedule, events, and notes all in one place.</div>
+    <h2 class="section-title" id="thisMonthTitle">This Month</h2>
+    <div class="section-sub" id="thisMonthSub">Your schedule, events, and notes all in one place.</div>
 
     <div class="add-form">
       <h4>Add Calendar Event</h4>
@@ -435,6 +472,7 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
           <option value="ev-purple">Reading</option>
           <option value="ev-pink">Ritual</option>
           <option value="ev-green">Business Class</option>
+          <option value="ev-blank">Custom / Other</option>
         </select>
         <button class="f-btn" onclick="addEvt()">+ Add</button>
       </div>
@@ -617,7 +655,7 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
       <span>🌕 Full Moon</span>
       <span>🌗 Last Quarter</span>
       <span style="color:#fbbf24;">● Gold dot = Blow Your Cinnamon</span>
-      <span style="color:#ef4444;font-weight:700;">⊙ Red/yellow ring = Today</span>
+      <span style="color:#fbbf24;font-weight:700;">◼ Yellow highlight = Today</span>
     </div>
 
     <!-- Day Drawer (slides up on click) -->
@@ -705,13 +743,27 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
 <!-- NAIMA PERSONAL PANEL -->
 <div class="personal-panel" id="panel-naima">
   <div class="personal-panel-nav">
-    <span class="personal-panel-title" style="color:var(--pink);">🌸 Naima's Space</span>
+    <span class="personal-panel-title" style="color:var(--pink);">🧿 Naima's Space</span>
     <button class="personal-panel-close" onclick="closePersonalPanel('naima')">← Back</button>
   </div>
   <div class="page">
     <div class="section-label">Private Space</div>
     <h2 class="section-title">Welcome, Naima ✨</h2>
     <div class="section-sub">This space belongs to you. Only you can see what's here.</div>
+
+    <!-- Private Calendar -->
+    <div class="section-label" style="margin-top:0;">My Private Calendar</div>
+    <div class="personal-cal" id="naimaCal">
+      <div class="personal-cal-hdr">
+        <span class="personal-cal-title" style="color:var(--pink);" id="naimaCalTitle">—</span>
+        <div class="personal-cal-nav">
+          <button onclick="personalCalNav('naima',-1)">prev</button>
+          <button onclick="personalCalNav('naima',1)">next</button>
+        </div>
+      </div>
+      <div class="personal-cal-grid" id="naimaCalGrid"></div>
+      <div class="personal-cal-evt-list" id="naimaCalEvtList"></div>
+    </div>
 
     <div class="add-form" style="border-color:var(--pink-border);">
       <h4 style="color:var(--pink);">Add to My Calendar</h4>
@@ -739,8 +791,8 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
     <div class="section-label">My Notes</div>
     <h2 class="section-title" style="font-size:clamp(16px,2.5vw,22px);">Private Notes</h2>
     <div class="section-sub">Journal entries, reflections, intentions — just for you.</div>
-    <div id="naimaNotesList"></div>
-    <button class="add-note-btn" onclick="addPersonalNote('naima')" style="background:var(--pink-bg);color:var(--pink);border-color:var(--pink-border);">+ Add Note</button>
+    <div id="naimaNotesList" class="notes-list-wrap"></div>
+    <button class="add-note-btn" onclick="addPersonalNote('naima')" style="background:var(--pink-bg);color:var(--pink);border-color:var(--pink-border);margin-top:8px;">+ Add Note</button>
 
     <div style="text-align:right;margin-top:20px;">
       <button class="f-btn" onclick="savePersonal('naima')" style="background:var(--pink-bg);color:var(--pink);border-color:var(--pink-border);">Save My Space</button>
@@ -759,6 +811,20 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
     <div class="section-label">Private Space</div>
     <h2 class="section-title">Welcome, Asha Ase ✨</h2>
     <div class="section-sub">This space belongs to you. Only you can see what's here.</div>
+
+    <!-- Private Calendar -->
+    <div class="section-label" style="margin-top:0;">My Private Calendar</div>
+    <div class="personal-cal" id="ashaCal">
+      <div class="personal-cal-hdr">
+        <span class="personal-cal-title" style="color:var(--green);" id="ashaCalTitle">—</span>
+        <div class="personal-cal-nav">
+          <button onclick="personalCalNav('asha',-1)">prev</button>
+          <button onclick="personalCalNav('asha',1)">next</button>
+        </div>
+      </div>
+      <div class="personal-cal-grid" id="ashaCalGrid"></div>
+      <div class="personal-cal-evt-list" id="ashaCalEvtList"></div>
+    </div>
 
     <div class="add-form" style="border-color:var(--green-border);">
       <h4 style="color:var(--green);">Add to My Calendar</h4>
@@ -786,8 +852,8 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
     <div class="section-label">My Notes</div>
     <h2 class="section-title" style="font-size:clamp(16px,2.5vw,22px);">Private Notes</h2>
     <div class="section-sub">Journal entries, reflections, intentions — just for you.</div>
-    <div id="ashaNotesList"></div>
-    <button class="add-note-btn" onclick="addPersonalNote('asha')" style="background:var(--green-bg);color:var(--green);border-color:var(--green-border);">+ Add Note</button>
+    <div id="ashaNotesList" class="notes-list-wrap"></div>
+    <button class="add-note-btn" onclick="addPersonalNote('asha')" style="background:var(--green-bg);color:var(--green);border-color:var(--green-border);margin-top:8px;">+ Add Note</button>
 
     <div style="text-align:right;margin-top:20px;">
       <button class="f-btn" onclick="savePersonal('asha')" style="background:var(--green-bg);color:var(--green);border-color:var(--green-border);">Save My Space</button>
@@ -837,12 +903,20 @@ function drawCal(){
   var firstDay=new Date(calY,calM,1).getDay();
   var days=new Date(calY,calM+1,0).getDate();
   var now=new Date();var isNow=now.getFullYear()===calY&&now.getMonth()===calM;
+  // build moon lookup for this month/year (MOONS is 2026 only)
+  var moonMap={};
+  if(calY===2026){MOONS.filter(function(mn){return mn.m===calM;}).forEach(function(mn){moonMap[mn.d]=mn;});}
   var DOWS=['S','M','T','W','T','F','S'];
   var h='';DOWS.forEach(function(d){h+='<div class="cal-wdow">'+d+'</div>';});
   for(var i=0;i<firstDay;i++) h+='<div class="cal-wday wempty"></div>';
   for(var d=1;d<=days;d++){
     var isT=isNow&&d===now.getDate();
-    h+='<div class="cal-wday'+(isT?' wtoday':'')+'"><div class="cal-wday-num">'+d+'</div>';
+    var moon=moonMap[d]||null;
+    h+='<div class="cal-wday'+(isT?' wtoday':'')+'">';
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;gap:2px;">';
+    h+='<div class="cal-wday-num">'+d+'</div>';
+    if(moon) h+='<span style="font-size:9px;line-height:1;" title="'+moon.label+'">'+moon.sym+'</span>';
+    h+='</div>';
     calEvts.filter(function(e){return e.day===d&&e.month===calM&&e.year===calY;}).forEach(function(e){
       h+='<div class="cal-wevent '+e.color+'">'+e.name+'</div>';
     });
@@ -862,6 +936,10 @@ function addEvt(){
   calEvts.push({name:name,day:day,month:calM,year:calY,color:color});
   document.getElementById('evtName').value='';document.getElementById('evtDay').value='';
   renderEvtList();if(calOpen)drawCal();
+  // sync personal calendars
+  ['naima','asha'].forEach(function(who){
+    if(document.getElementById('panel-'+who).classList.contains('open')) drawPersonalCal(who);
+  });
 }
 
 function delEvt(i){calEvts.splice(i,1);renderEvtList();if(calOpen)drawCal();}
@@ -871,7 +949,7 @@ function renderEvtList(){
   var el=document.getElementById('evtList');
   if(!list.length){el.innerHTML='<div style="font-size:13px;color:var(--muted);padding:8px 0;">No events yet for this month.</div>';return;}
   el.innerHTML=list.map(function(e,i){
-    var c=e.color==='ev-purple'?'var(--purple)':e.color==='ev-pink'?'var(--pink)':'var(--green)';
+    var c=e.color==='ev-purple'?'var(--purple)':e.color==='ev-pink'?'var(--pink)':e.color==='ev-green'?'var(--green)':'rgba(255,255,255,0.5)';
     return '<div class="evt-item"><div class="evt-dot" style="background:'+c+'"></div><span class="evt-name">'+e.name+'</span><span class="evt-day">Day '+e.day+'</span><button class="evt-del" onclick="delEvt('+calEvts.indexOf(e)+')">x</button></div>';
   }).join('');
 }
@@ -894,8 +972,8 @@ function delNote(page,id){
 function noteCardHTML(page,n){
   var author=n.author||'ju';
   var badge='<span class="year-note-author author-'+author+'" style="flex-shrink:0;">'+AUTHOR_LABELS[author]+'</span>';
-  return '<div class="note-card" data-id="'+n.id+'">'+
-    '<div class="note-hdr"><input class="note-label" placeholder="Note title..." value="'+esc(n.label)+'" oninput="updateNote(\''+page+'\','+n.id+',\'label\',this.value)" />'+badge+'<button class="note-del" onclick="delNote(\''+page+'\','+n.id+')">x</button></div>'+
+  return '<div class="note-card" data-id="'+n.id+'" data-page="'+page+'">'+
+    '<div class="note-hdr"><span class="drag-handle" title="Drag to reorder">⠿</span><input class="note-label" placeholder="Note title..." value="'+esc(n.label)+'" oninput="updateNote(\''+page+'\','+n.id+',\'label\',this.value)" />'+badge+'<button class="note-del" onclick="delNote(\''+page+'\','+n.id+')">x</button></div>'+
     '<div class="note-body"><textarea class="note-ta" placeholder="Write here..." oninput="updateNote(\''+page+'\','+n.id+',\'text\',this.value)">'+esc(n.text)+'</textarea></div>'+
     '</div>';
 }
@@ -905,7 +983,12 @@ function updateNote(page,id,field,val){
 }
 function renderNotes(page){
   var listId={home:'homeNotesList',thismonth:'notesList',reading:'readingNotesList',arch:'archNotesList'}[page];
-  document.getElementById(listId).innerHTML=notes[page].map(function(n){return noteCardHTML(page,n);}).join('');
+  var el=document.getElementById(listId);
+  el.innerHTML=notes[page].map(function(n){return noteCardHTML(page,n);}).join('');
+  el.querySelectorAll('.note-card').forEach(function(card){
+    var id=parseInt(card.getAttribute('data-id'));
+    makeDraggable(card,page,id);
+  });
 }
 function renderAllNotes(){
   ['home','thismonth','reading','arch'].forEach(renderNotes);
@@ -1083,35 +1166,70 @@ function retakeQ(){
   renderQ();
 }
 
-// QUESTION GENERATOR
-async function generateQ(){
+// QUESTION GENERATOR — smart local version, no API key needed
+function generateQ(){
   var input=document.getElementById('qgenInput').value.trim();
   if(!input) return;
   var btn=document.getElementById('qgenBtn');
   var thinking=document.getElementById('qgenThinking');
   var result=document.getElementById('qgenResult');
   btn.disabled=true;thinking.style.display='block';result.style.display='none';
-  try{
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:300,
-        system:'You are a spiritual reading question refiner for a psychic medium named Ju. Her mentees are preparing for private readings. Take their raw thoughts and craft ONE single powerful specific open-ended reading question that will give the clearest answer from their spirit team. Make it precise and spiritually framed. Output only the question itself. No explanation.',
-        messages:[{role:'user',content:'What is on my mind: '+input+'\n\nCraft my reading question.'}]
-      })
-    });
-    var data=await resp.json();
-    var q=(data.content&&data.content[0]&&data.content[0].text)||'';
-    thinking.style.display='none';
-    if(q){result.style.display='block';document.getElementById('qgenOut').textContent=q;}
-  }catch(e){
+
+  var lower=input.toLowerCase();
+  var hasFamily   = /\b(family|mother|father|mom|dad|sister|brother|parent|sibling|relative|in-law|cousin|aunt|uncle)\b/.test(lower);
+  var hasStress   = /\b(stress|stressed|overwhelm|overwhelmed|exhausted|drain|drained|too much|tired|burnt out)\b/.test(lower);
+  var hasMoney    = /\b(money|broke|finances|bills|income|debt|afford|financial|no money|struggling|funds)\b/.test(lower);
+  var hasLove     = /\b(love|relationship|partner|him|her|boyfriend|girlfriend|husband|wife|situationship|ex|dating|marriage|heart)\b/.test(lower);
+  var hasHealing  = /\b(heal|trauma|hurt|pain|wound|fear|block|stuck|grief|loss|abuse|shame|guilt|anger|resentment)\b/.test(lower);
+  var hasSpirit   = /\b(gift|ancestors|spiritual|psychic|medium|calling|abilities|signs|god|universe|purpose|mission)\b/.test(lower);
+  var hasFear     = /\b(fear|scared|afraid|terrified|nervous|anxiety|anxious|worry|worried)\b/.test(lower);
+  var hasDecision = /\b(should i|do i|leave|stay|go|move|quit|start|wait|decision|choose|choice)\b/.test(lower);
+
+  var q='';
+  if(hasFamily && hasMoney && hasStress){
+    q='What do my ancestors want me to know about breaking free from family pressure and financial lack at the same time?';
+  } else if(hasFamily && hasStress){
+    q='What is the spiritual root of this family stress, and what do my ancestors need me to stop carrying for them?';
+  } else if(hasFamily && hasMoney){
+    q='How is my family dynamic connected to my money blocks, and what needs to shift first?';
+  } else if(hasMoney && hasStress){
+    q='What is the ancestral pattern behind my financial struggle, and what action is being blocked by fear?';
+  } else if(hasMoney && hasFear){
+    q='What is the spiritual block between me and financial stability, and what am I afraid to do?';
+  } else if(hasLove && hasHealing){
+    q='What unhealed wound keeps drawing me into this same relationship pattern, and what does it need from me?';
+  } else if(hasLove && hasFear){
+    q='What is my spirit team saying about what I am afraid to face in my love life right now?';
+  } else if(hasLove && hasDecision){
+    q='What does my spirit team need me to know before I make this decision about my relationship?';
+  } else if(hasLove){
+    q='What truth about my heart and my worth is my spirit team trying to get through to me right now?';
+  } else if(hasHealing && hasFear){
+    q='What am I still protecting myself from, and what does my healing actually require me to face?';
+  } else if(hasHealing){
+    q='What is the root of what I keep carrying, and what will it actually take to release it?';
+  } else if(hasSpirit && hasDecision){
+    q='What is my calling asking of me, and what decision am I being guided to stop avoiding?';
+  } else if(hasSpirit){
+    q='What message have my ancestors been trying to reach me with that I have not fully received yet?';
+  } else if(hasMoney){
+    q='What is the real block between me and abundance, and what does my spirit team say needs to change?';
+  } else if(hasDecision){
+    q='What does my spirit team need me to know before I make this decision, and what am I not seeing?';
+  } else if(hasStress){
+    q='What is the deeper root of this overwhelm, and what is my spirit team saying I need to put down?';
+  } else if(hasFamily){
+    q='What do my ancestors want me to understand about this family situation, and what is mine to carry versus theirs?';
+  } else {
+    q='What is the most urgent message my spirit team has for me right now, and what am I being asked to finally hear?';
+  }
+
+  setTimeout(function(){
     thinking.style.display='none';
     result.style.display='block';
-    document.getElementById('qgenOut').textContent='Something went wrong. Please try again.';
-  }
-  btn.disabled=false;
+    document.getElementById('qgenOut').textContent=q;
+    btn.disabled=false;
+  }, 1400);
 }
 // ─────────────────────────────────────────────
 // YEAR CALENDAR (2026)
@@ -1147,58 +1265,74 @@ function buildYearGrid() {
   var todayM = now.getMonth();
   var todayD = now.getDate();
 
+  var colorMap = {
+    'yev-pink':'var(--pink)','yev-purple':'var(--purple)',
+    'yev-green':'var(--green)','yev-gold':'#fbbf24','yev-sky':'#38bdf8'
+  };
+
   var html = '';
   for (var m = 0; m < 12; m++) {
     var firstDay = new Date(2026, m, 1).getDay();
     var days = MONTH_DAYS[m];
-    // user events this month
-    var evtsThisMonth = yearEvents.filter(function(e){return e.month===m;});
-    // moon days this month
+    var evtsThisMonth = yearEvents.filter(function(e){return e.month===m;}).sort(function(a,b){return a.day-b.day;});
     var moonDays = {};
     MOONS.filter(function(mn){return mn.m===m;}).forEach(function(mn){moonDays[mn.d]=mn;});
 
     html += '<div class="month-block">';
-    html += '<div class="month-block-hdr"><span class="month-block-name">' + MONTHS_FULL[m].toUpperCase() + '</span></div>';
+
+    // Header
+    html += '<div class="month-block-hdr"><span class="month-block-name">' + MONTHS_FULL[m].toUpperCase() + '</span>';
+    if (evtsThisMonth.length) html += '<span style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--muted);">'+evtsThisMonth.length+' event'+(evtsThisMonth.length>1?'s':'')+'</span>';
+    html += '</div>';
+
+    // Mini grid
     html += '<div class="month-mini-grid">';
     ['S','M','T','W','T','F','S'].forEach(function(d){html+='<div class="mmday-hdr">'+d+'</div>';});
     for (var i = 0; i < firstDay; i++) html += '<div></div>';
 
     for (var d = 1; d <= days; d++) {
       var evts = yearEvents.filter(function(e){return e.month===m&&e.day===d;});
-      // cinnamon on the 1st
       var isCinn = (d === 1);
-      // moon
       var moon = moonDays[d] || null;
-      // today check — works for any year since date is dynamic
       var isToday = (todayY===2026&&todayM===m&&todayD===d);
 
       var classes = 'mmday';
       if (isToday) classes += ' today';
       if (evts.length || isCinn || moon) classes += ' has-events';
 
-      // build tooltip
       var tips = [];
-      if (isCinn) tips.push('🌿 Blow Your Cinnamon');
+      if (isCinn) tips.push('🌿 Blow Cinnamon');
       if (moon) tips.push(moon.sym+' '+moon.label);
       evts.forEach(function(e){tips.push(e.name);});
-      var title = MONTHS_SHORT[m]+' '+d+(tips.length?' · '+tips.join(' · '):'');
+      var title = MONTHS_SHORT[m]+' '+d+(tips.length?' — '+tips.join(', '):'');
 
       html += '<div class="'+classes+'" onclick="openDrawer('+m+','+d+')" title="'+title+'">';
       html += d;
-
-      // moon symbol (shown above the number via absolute positioning trick — use sub-line)
-      if (moon) {
-        html += '<span style="position:absolute;top:0;right:0;font-size:8px;line-height:1;" title="'+moon.label+'">'+moon.sym+'</span>';
-      }
-      // cinnamon dot (gold)
+      if (moon) html += '<span style="position:absolute;top:0;right:0;font-size:7px;line-height:1;">'+moon.sym+'</span>';
       if (isCinn) {
-        html += '<span class="mmday-dot" style="background:#fbbf24;bottom:1px;"></span>';
+        html += '<span class="mmday-dot" style="background:#fbbf24;"></span>';
       } else if (evts.length) {
         html += '<span class="mmday-dot" style="background:'+getDotColor(evts[0].color)+'"></span>';
       }
       html += '</div>';
     }
-    html += '</div></div>';
+    html += '</div>';
+
+    // Visible event list below the grid
+    if (evtsThisMonth.length) {
+      html += '<div class="month-evt-list">';
+      evtsThisMonth.forEach(function(e){
+        var c = colorMap[e.color] || 'var(--purple)';
+        html += '<div class="month-evt-row" onclick="openDrawer('+e.month+','+e.day+')" style="cursor:pointer;" title="Click to manage">';
+        html += '<div class="month-evt-bar" style="background:'+c+';"></div>';
+        html += '<span class="month-evt-day">'+e.day+'</span>';
+        html += '<span class="month-evt-name">'+esc(e.name)+'</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '</div>'; // close month-block
   }
   grid.innerHTML = html;
 }
@@ -1213,11 +1347,19 @@ function addYearEvent() {
   var month = parseInt(document.getElementById('yevMonth').value);
   var day = parseInt(document.getElementById('yevDay').value) || 0;
   var color = document.getElementById('yevColor').value;
-  if (!name || !day) return;
-  yearEvents.push({id:Date.now(), name:name, month:month, day:day, color:color});
+  if (!name) { document.getElementById('yevName').focus(); return; }
+  if (!day || day < 1 || day > 31) { document.getElementById('yevDay').focus(); return; }
+  var id = Date.now();
+  yearEvents.push({id:id, name:name, month:month, day:day, color:color});
+  var evColor = color==='yev-purple'?'ev-purple':color==='yev-pink'?'ev-pink':color==='yev-green'?'ev-green':'ev-blank';
+  calEvts.push({name:name, day:day, month:month, year:2026, color:evColor, yearId:id});
   document.getElementById('yevName').value = '';
   document.getElementById('yevDay').value = '';
   buildYearGrid();
+  if(calOpen) drawCal();
+  // scroll to the month it was added to
+  var monthBlocks = document.querySelectorAll('.month-block');
+  if(monthBlocks[month]) monthBlocks[month].scrollIntoView({behavior:'smooth', block:'center'});
 }
 
 function openDrawer(m, d) {
@@ -1263,16 +1405,23 @@ function addDrawerEvent() {
   var name = document.getElementById('drawerEvName').value.trim();
   var color = document.getElementById('drawerEvColor').value;
   if (!name) return;
-  yearEvents.push({id:Date.now(), name:name, month:drawerMonth, day:drawerDay, color:color});
+  var id = Date.now();
+  yearEvents.push({id:id, name:name, month:drawerMonth, day:drawerDay, color:color});
+  // sync to calEvts
+  var evColor = color==='yev-purple'?'ev-purple':color==='yev-pink'?'ev-pink':color==='yev-green'?'ev-green':'ev-blank';
+  calEvts.push({name:name, day:drawerDay, month:drawerMonth, year:2026, color:evColor, yearId:id});
   document.getElementById('drawerEvName').value = '';
   renderDrawerEvents();
   buildYearGrid();
+  if(calOpen) drawCal();
 }
 
 function delYearEvent(id) {
   yearEvents = yearEvents.filter(function(e){return e.id!==id;});
+  calEvts = calEvts.filter(function(e){return e.yearId!==id;});
   renderDrawerEvents();
   buildYearGrid();
+  if(calOpen) drawCal();
 }
 
 // ─────────────────────────────────────────────
@@ -1318,7 +1467,171 @@ function updateYearNote(id, field, val) {
 }
 
 // ─────────────────────────────────────────────
-// PERSONAL PAGES (Naima + Asha)
+// ─────────────────────────────────────────────
+// DYNAMIC "THIS MONTH" LABEL + CAL INIT
+// ─────────────────────────────────────────────
+(function initDynamicMonth(){
+  var now = new Date();
+  var MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var m = MONTHS_FULL[now.getMonth()];
+  var tab = document.getElementById('thisMonthTab');
+  if(tab) tab.textContent = m;
+  var title = document.getElementById('thisMonthTitle');
+  if(title) title.textContent = m;
+  var sub = document.getElementById('thisMonthSub');
+  if(sub) sub.textContent = 'Your schedule, events, and notes for '+m+'.';
+  calM = now.getMonth();
+  calY = now.getFullYear();
+  // Set year form month to current month
+  var yevMonth = document.getElementById('yevMonth');
+  if(yevMonth) yevMonth.value = String(now.getMonth());
+})();
+
+// ─────────────────────────────────────────────
+// PERSONAL PAGE CALENDAR
+// ─────────────────────────────────────────────
+var personalCalState = {
+  naima: { m: new Date().getMonth(), y: new Date().getFullYear() },
+  asha:  { m: new Date().getMonth(), y: new Date().getFullYear() }
+};
+
+var PCAL_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var PCAL_MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function getDotColorHex(color){
+  var map={
+    'yev-pink':'#f472b6','yev-purple':'#c084fc','yev-gold':'#fbbf24',
+    'yev-green':'#4ade80','yev-sky':'#38bdf8'
+  };
+  return map[color]||'#9a8db5';
+}
+
+function drawPersonalCal(who){
+  var s = personalCalState[who];
+  var now = new Date();
+  var todayY = now.getFullYear(), todayM = now.getMonth(), todayD = now.getDate();
+  var firstDay = new Date(s.y, s.m, 1).getDay();
+  var days = new Date(s.y, s.m+1, 0).getDate();
+
+  // Merge private events + shared calEvts for this person's view
+  var privateEvts = personalData[who].events;
+  // shared events come from calEvts (month/year matched)
+  var sharedEvts = calEvts.filter(function(e){return e.month===s.m && e.year===s.y;}).map(function(e){
+    return {day:e.day, month:e.month, color:e.color, name:e.name, shared:true};
+  });
+  var allEvts = privateEvts.filter(function(e){return e.month===s.m;}).concat(sharedEvts);
+
+  // moon map for 2026
+  var moonMap={};
+  if(s.y===2026){MOONS.filter(function(mn){return mn.m===s.m;}).forEach(function(mn){moonMap[mn.d]=mn;});}
+
+  // Title
+  var titleEl = document.getElementById(who+'CalTitle');
+  if(titleEl) titleEl.textContent = PCAL_MONTHS[s.m] + ' ' + s.y;
+
+  // Build grid
+  var h = '';
+  ['S','M','T','W','T','F','S'].forEach(function(d){h+='<div class="pcal-dow">'+d+'</div>';});
+  for(var i=0;i<firstDay;i++) h+='<div></div>';
+  for(var d=1;d<=days;d++){
+    var isToday = s.y===todayY && s.m===todayM && d===todayD;
+    var dayEvts = allEvts.filter(function(e){return e.day===d;});
+    var moon = moonMap[d]||null;
+    var hasEvt = dayEvts.length>0 || moon;
+    var cls = 'pcal-day'+(isToday?' pcal-today':'')+(hasEvt?' pcal-has-evt':'');
+    var moonHtml = moon ? '<span style="font-size:7px;line-height:1;position:absolute;top:1px;right:1px;" title="'+moon.label+'">'+moon.sym+'</span>' : '';
+    var dot = dayEvts.length ? '<div class="pcal-dot" style="background:'+getDotColorHex(dayEvts[0].color)+';"></div>' : '';
+    h+='<div class="'+cls+'" style="position:relative;">'+d+moonHtml+dot+'</div>';
+  }
+  var gridEl = document.getElementById(who+'CalGrid');
+  if(gridEl) gridEl.innerHTML = h;
+
+  // Event list for this month — show shared + private
+  var monthEvts = allEvts.slice().sort(function(a,b){return a.day-b.day;});
+  var evtEl = document.getElementById(who+'CalEvtList');
+  if(evtEl){
+    if(!monthEvts.length && !Object.keys(moonMap).length){
+      evtEl.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:4px 2px;">No events this month.</div>';
+    } else {
+      var items = '';
+      // moon phases first as a compact line
+      var moonList = MOONS.filter(function(mn){return mn.m===s.m && s.y===2026;});
+      if(moonList.length){
+        items += '<div style="font-size:10px;color:var(--muted);padding:2px 0;font-family:\'DM Mono\',monospace;letter-spacing:0.04em;">';
+        moonList.forEach(function(mn){items+=mn.sym+' '+mn.d+' ';});
+        items += '</div>';
+      }
+      items += monthEvts.map(function(e){
+        var badge = e.shared ? '<span style="font-size:9px;color:var(--muted);margin-left:4px;">shared</span>' : '';
+        return '<div class="pcal-evt-item"><div class="pcal-evt-dot" style="background:'+getDotColorHex(e.color)+'"></div>'+
+          '<span class="pcal-evt-name">'+esc(e.name)+badge+'</span>'+
+          '<span class="pcal-evt-date">'+PCAL_MONTHS_SHORT[e.month]+' '+e.day+'</span>'+
+          (e.shared?'':'<button class="pcal-evt-del" onclick="delPersonalEvent(\''+who+'\','+e.id+')">x</button>')+
+          '</div>';
+      }).join('');
+      evtEl.innerHTML = items;
+    }
+  }
+}
+
+function personalCalNav(who, dir){
+  var s = personalCalState[who];
+  s.m += dir;
+  if(s.m < 0){s.m=11;s.y--;}
+  if(s.m > 11){s.m=0;s.y++;}
+  drawPersonalCal(who);
+}
+
+// ─────────────────────────────────────────────
+// DRAGGABLE NOTES
+// ─────────────────────────────────────────────
+var dragSrcPage = null, dragSrcId = null;
+
+function makeDraggable(el, page, id){
+  el.setAttribute('draggable','true');
+  el.addEventListener('dragstart',function(e){
+    dragSrcPage=page; dragSrcId=id;
+    el.classList.add('dragging');
+    e.dataTransfer.effectAllowed='move';
+  });
+  el.addEventListener('dragend',function(){
+    el.classList.remove('dragging');
+    document.querySelectorAll('.note-card').forEach(function(c){
+      c.classList.remove('drag-over-top','drag-over-bottom');
+    });
+  });
+  el.addEventListener('dragover',function(e){
+    e.preventDefault();
+    if(dragSrcId===id) return;
+    var rect=el.getBoundingClientRect();
+    var mid=rect.top+rect.height/2;
+    el.classList.remove('drag-over-top','drag-over-bottom');
+    if(e.clientY<mid) el.classList.add('drag-over-top');
+    else el.classList.add('drag-over-bottom');
+  });
+  el.addEventListener('dragleave',function(){
+    el.classList.remove('drag-over-top','drag-over-bottom');
+  });
+  el.addEventListener('drop',function(e){
+    e.preventDefault();
+    el.classList.remove('drag-over-top','drag-over-bottom');
+    if(dragSrcPage!==page||dragSrcId===id) return;
+    var rect=el.getBoundingClientRect();
+    var mid=rect.top+rect.height/2;
+    var insertAfter=e.clientY>=mid;
+    var arr=notes[page];
+    var fromIdx=arr.findIndex(function(n){return n.id===dragSrcId;});
+    var toIdx=arr.findIndex(function(n){return n.id===id;});
+    if(fromIdx===-1||toIdx===-1) return;
+    var moved=arr.splice(fromIdx,1)[0];
+    var newTo=arr.findIndex(function(n){return n.id===id;});
+    arr.splice(insertAfter?newTo+1:newTo,0,moved);
+    renderNotes(page);
+  });
+}
+
+// ─────────────────────────────────────────────
+// PERSONAL PAGE CALENDAR (hook into renderPersonalPanel)
 // ─────────────────────────────────────────────
 var personalData = {
   naima: {events:[], notes:[]},
@@ -1327,7 +1640,7 @@ var personalData = {
 var pendingPersonalPage = null;
 
 var PERSONAL_CFG = {
-  naima: {code:'000', emoji:'🌸', label:"Naima's Space"},
+  naima: {code:'000', emoji:'🧿', label:"Naima's Space"},
   asha:  {code:'222', emoji:'✨', label:"Asha's Space"}
 };
 
@@ -1421,16 +1734,62 @@ function renderPersonalPanel(who) {
   var notesEl = document.getElementById(who + 'NotesList');
   if (notesEl) {
     notesEl.innerHTML = personalData[who].notes.map(function(n){
-      return '<div class="note-card">'+
-        '<div class="note-hdr"><input class="note-label" placeholder="Note title..." value="'+esc(n.label)+'" oninput="updatePersonalNote(\''+who+'\','+n.id+',\'label\',this.value)" /><button class="note-del" onclick="delPersonalNote(\''+who+'\','+n.id+')">x</button></div>'+
+      return '<div class="note-card" data-id="'+n.id+'">'+
+        '<div class="note-hdr"><span class="drag-handle" title="Drag to reorder">⠿</span><input class="note-label" placeholder="Note title..." value="'+esc(n.label)+'" oninput="updatePersonalNote(\''+who+'\','+n.id+',\'label\',this.value)" /><button class="note-del" onclick="delPersonalNote(\''+who+'\','+n.id+')">x</button></div>'+
         '<div class="note-body"><textarea class="note-ta" placeholder="Write here..." oninput="updatePersonalNote(\''+who+'\','+n.id+',\'text\',this.value)">'+esc(n.text)+'</textarea></div>'+
       '</div>';
     }).join('');
+    // Make notes draggable
+    notesEl.querySelectorAll('.note-card').forEach(function(el){
+      var id = parseInt(el.getAttribute('data-id'));
+      makePersonalNoteDraggable(el, who, id);
+    });
   }
+  // Draw private calendar
+  drawPersonalCal(who);
 }
 
+function makePersonalNoteDraggable(el, who, id){
+  var pData = personalData[who];
+  el.setAttribute('draggable','true');
+  el.addEventListener('dragstart',function(e){
+    el.classList.add('dragging');
+    e.dataTransfer.setData('personal-who',who);
+    e.dataTransfer.setData('personal-id',String(id));
+    e.dataTransfer.effectAllowed='move';
+  });
+  el.addEventListener('dragend',function(){
+    el.classList.remove('dragging');
+    document.querySelectorAll('.note-card').forEach(function(c){c.classList.remove('drag-over-top','drag-over-bottom');});
+  });
+  el.addEventListener('dragover',function(e){
+    e.preventDefault();
+    var rect=el.getBoundingClientRect();
+    el.classList.remove('drag-over-top','drag-over-bottom');
+    if(e.clientY<rect.top+rect.height/2) el.classList.add('drag-over-top');
+    else el.classList.add('drag-over-bottom');
+  });
+  el.addEventListener('dragleave',function(){el.classList.remove('drag-over-top','drag-over-bottom');});
+  el.addEventListener('drop',function(e){
+    e.preventDefault();
+    el.classList.remove('drag-over-top','drag-over-bottom');
+    var srcId=parseInt(e.dataTransfer.getData('personal-id'));
+    if(srcId===id) return;
+    var arr=pData.notes;
+    var fromIdx=arr.findIndex(function(n){return n.id===srcId;});
+    var toIdx=arr.findIndex(function(n){return n.id===id;});
+    if(fromIdx===-1||toIdx===-1) return;
+    var rect=el.getBoundingClientRect();
+    var insertAfter=e.clientY>=rect.top+rect.height/2;
+    var moved=arr.splice(fromIdx,1)[0];
+    var newTo=arr.findIndex(function(n){return n.id===id;});
+    arr.splice(insertAfter?newTo+1:newTo,0,moved);
+    renderPersonalPanel(who);
+  });
+}
+
+
 function savePersonal(who) {
-  // Personal data is saved to a separate localStorage key (not shared with main save)
   localStorage.setItem('legacy_personal_' + who, JSON.stringify(personalData[who]));
   var msg = document.getElementById(who + 'SavedMsg');
   if (msg) { msg.style.display = 'block'; setTimeout(function(){msg.style.display='none';}, 2000); }
