@@ -791,11 +791,10 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
     </div>
     <div id="naimaEvtList" style="margin-bottom:24px;"></div>
 
-    <div class="section-label">My Notes</div>
-    <h2 class="section-title" style="font-size:clamp(16px,2.5vw,22px);">Private Notes</h2>
-    <div class="section-sub">Journal entries, reflections, intentions — just for you.</div>
-    <div id="naimaNotesList" class="notes-list-wrap"></div>
-    <button class="add-note-btn" onclick="addPersonalNote('naima')" style="background:var(--pink-bg);color:var(--pink);border-color:var(--pink-border);margin-top:8px;">+ Add Note</button>
+    <div class="section-label">Your Notion Planner</div>
+    <h2 class="section-title" style="font-size:clamp(16px,2.5vw,22px);">Reflections &amp; Planning</h2>
+    <div class="section-sub">To share reflections or updates with Ju, add them to your Notion. She will check upon your request. 💜</div>
+    <a href="https://www.notion.so/thecyberdigitalgirlie/Naima-Digital-Planner-2026-2dc7df19fccc80078f54eae0251af1e0" target="_blank" style="display:inline-block;font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.1em;background:linear-gradient(135deg,var(--purple2),var(--pink2));color:#fff;border-radius:999px;padding:13px 30px;text-decoration:none;">Open My Notion Planner ✨</a>
 
     <div style="text-align:right;margin-top:20px;">
       <button class="f-btn" onclick="savePersonal('naima')" style="background:var(--pink-bg);color:var(--pink);border-color:var(--pink-border);">Save My Space</button>
@@ -852,11 +851,10 @@ nav{background:rgba(8,5,15,0.9);backdrop-filter:blur(14px);border-bottom:0.5px s
     </div>
     <div id="ashaEvtList" style="margin-bottom:24px;"></div>
 
-    <div class="section-label">My Notes</div>
-    <h2 class="section-title" style="font-size:clamp(16px,2.5vw,22px);">Private Notes</h2>
-    <div class="section-sub">Journal entries, reflections, intentions — just for you.</div>
-    <div id="ashaNotesList" class="notes-list-wrap"></div>
-    <button class="add-note-btn" onclick="addPersonalNote('asha')" style="background:var(--green-bg);color:var(--green);border-color:var(--green-border);margin-top:8px;">+ Add Note</button>
+    <div class="section-label">Your Notion Planner</div>
+    <h2 class="section-title" style="font-size:clamp(16px,2.5vw,22px);">Reflections &amp; Planning</h2>
+    <div class="section-sub">To share reflections or updates with Ju, add them to your Notion. She will check upon your request. 💜</div>
+    <a href="https://www.notion.so/thecyberdigitalgirlie/Asha-s-2026-Digital-Planner-2dc7df19fccc816690e9d9771b96fe84" target="_blank" style="display:inline-block;font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.1em;background:linear-gradient(135deg,var(--purple2),var(--pink2));color:#fff;border-radius:999px;padding:13px 30px;text-decoration:none;">Open My Notion Planner ✨</a>
 
     <div style="text-align:right;margin-top:20px;">
       <button class="f-btn" onclick="savePersonal('asha')" style="background:var(--green-bg);color:var(--green);border-color:var(--green-border);">Save My Space</button>
@@ -1078,91 +1076,29 @@ function downloadFile(id){
 
 
 var _saveTimer=null;
-// SAVE/LOAD
-// Uses Firebase Realtime Database for cross-device sync.
-// Ju sets FIREBASE_URL once — mentees never touch anything.
-var FIREBASE_URL = 'https://legacy-mentorship-default-rtdb.firebaseio.com';
-
-function getAllData(){
-  var archMeta=archive.map(function(a){
-    return a.type==='file'?{id:a.id,name:a.name,icon:a.icon,type:'file',fileName:a.fileName,fileSize:a.fileSize}:a;
-  });
-  return {evts:calEvts,notes:notes,yearEvents:yearEvents,yearNotes:yearNotes,archive:archMeta,v:2};
-}
-
-function applyData(d){
-  if(!d||!d.v) return;
-  if(d.evts) calEvts=d.evts;
-  if(d.notes){
-    if(Array.isArray(d.notes)) notes.thismonth=d.notes;
-    else notes=Object.assign({home:[],thismonth:[],reading:[],arch:[]},d.notes);
+// SAVE/LOAD — simple localStorage, Ju pushes updates via GitHub
+function saveAll(){
+  localStorage.setItem('legacy_evts',JSON.stringify(calEvts));
+  localStorage.setItem('legacy_notes',JSON.stringify(notes));
+  localStorage.setItem('legacy_yearevts',JSON.stringify(yearEvents));
+  localStorage.setItem('legacy_yearnotes',JSON.stringify(yearNotes));
+  var archMeta=archive.map(function(a){return a.type==='file'?{id:a.id,name:a.name,icon:a.icon,type:'file',fileName:a.fileName,fileSize:a.fileSize,fileData:a.fileData}:a;});
+  try{localStorage.setItem('legacy_archive',JSON.stringify(archMeta));}catch(e){
+    var archLight=archive.map(function(a){return a.type==='file'?{id:a.id,name:a.name,icon:a.icon,type:'file',fileName:a.fileName,fileSize:a.fileSize}:a;});
+    localStorage.setItem('legacy_archive',JSON.stringify(archLight));
   }
-  if(d.yearEvents) yearEvents=d.yearEvents;
-  if(d.yearNotes) yearNotes=d.yearNotes;
-  if(d.archive) archive=d.archive;
-}
-
-async function saveAll(){
-  var data=getAllData();
-  try{localStorage.setItem('legacy_local',JSON.stringify(data));}catch(e){}
-  try{
-    var resp=await fetch(FIREBASE_URL+'/shared.json',{
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(data)
-    });
-    if(!resp.ok){
-      var err=await resp.text();
-      alert('Firebase save error: '+resp.status+' — '+err);
-      return;
-    }
-  }catch(e){
-    alert('Network error saving: '+e.message);
-    return;
-  }
-  try{
-    await fetch(FIREBASE_URL+'/personal/naima.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(personalData.naima)});
-    await fetch(FIREBASE_URL+'/personal/asha.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(personalData.asha)});
-  }catch(e){}
   ['savedMsg','savedMsg2'].forEach(function(id){
     var msg=document.getElementById(id);if(msg){msg.style.display='block';setTimeout(function(){msg.style.display='none';},2000);}
   });
 }
-
-async function loadAll(){
-  // Always load from Firebase first — ignore local cache
-  try{
-    var resp=await fetch(FIREBASE_URL+'/shared.json?t='+Date.now());
-    if(resp.ok){
-      var d=await resp.json();
-      if(d&&d.v){
-        applyData(d);
-        localStorage.setItem('legacy_local',JSON.stringify(d));
-      }
-    }
-  }catch(e){
-    // Firebase failed, fall back to local
-    try{
-      var local=JSON.parse(localStorage.getItem('legacy_local')||'null');
-      if(local) applyData(local);
-      else{
-        try{calEvts=JSON.parse(localStorage.getItem('legacy_evts')||'[]');}catch(e){}
-        try{var n=JSON.parse(localStorage.getItem('legacy_notes')||'{}');
-          if(Array.isArray(n)){notes.thismonth=n;}else{notes=Object.assign({home:[],thismonth:[],reading:[],arch:[]},n);}
-        }catch(e){}
-        try{yearEvents=JSON.parse(localStorage.getItem('legacy_yearevts')||'[]');}catch(e){}
-        try{yearNotes=JSON.parse(localStorage.getItem('legacy_yearnotes')||'[]');}catch(e){}
-        try{archive=JSON.parse(localStorage.getItem('legacy_archive')||'[]');}catch(e){}
-      }
-    }catch(e){}
-  }
-  // Load personal from Firebase
-  try{
-    var rn=await fetch(FIREBASE_URL+'/personal/naima.json?t='+Date.now());
-    if(rn.ok){var dn=await rn.json();if(dn)personalData.naima=dn;}
-    var ra=await fetch(FIREBASE_URL+'/personal/asha.json?t='+Date.now());
-    if(ra.ok){var da=await ra.json();if(da)personalData.asha=da;}
+function loadAll(){
+  try{calEvts=JSON.parse(localStorage.getItem('legacy_evts')||'[]');}catch(e){}
+  try{var n=JSON.parse(localStorage.getItem('legacy_notes')||'{}');
+    if(Array.isArray(n)){notes.thismonth=n;}else{notes=Object.assign({home:[],thismonth:[],reading:[],arch:[]},n);}
   }catch(e){}
+  try{yearEvents=JSON.parse(localStorage.getItem('legacy_yearevts')||'[]');}catch(e){}
+  try{yearNotes=JSON.parse(localStorage.getItem('legacy_yearnotes')||'[]');}catch(e){}
+  try{archive=JSON.parse(localStorage.getItem('legacy_archive')||'[]');}catch(e){}
   renderEvtList();renderAllNotes();renderArchive();buildYearGrid();renderYearNotes();
   loadPersonal();
 }
@@ -1859,15 +1795,8 @@ function makePersonalNoteDraggable(el, who, id){
 }
 
 
-async function savePersonal(who) {
+function savePersonal(who) {
   localStorage.setItem('legacy_personal_' + who, JSON.stringify(personalData[who]));
-  try{
-    await fetch(FIREBASE_URL+'/personal/'+who+'.json',{
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(personalData[who])
-    });
-  }catch(e){}
   var msg = document.getElementById(who + 'SavedMsg');
   if (msg) { msg.style.display = 'block'; setTimeout(function(){msg.style.display='none';}, 2000); }
 }
