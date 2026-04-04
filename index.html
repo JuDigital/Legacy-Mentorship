@@ -1100,17 +1100,22 @@ function applyData(d){
 
 async function saveAll(){
   var data=getAllData();
-  // Save locally always
   try{localStorage.setItem('legacy_local',JSON.stringify(data));}catch(e){}
-  // Push to Firebase
   try{
-    await fetch(FIREBASE_URL+'/shared.json',{
+    var resp=await fetch(FIREBASE_URL+'/shared.json',{
       method:'PUT',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify(data)
     });
-  }catch(e){}
-  // Also save personal data to Firebase per user
+    if(!resp.ok){
+      var err=await resp.text();
+      alert('Firebase save error: '+resp.status+' — '+err);
+      return;
+    }
+  }catch(e){
+    alert('Network error saving: '+e.message);
+    return;
+  }
   try{
     await fetch(FIREBASE_URL+'/personal/naima.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(personalData.naima)});
     await fetch(FIREBASE_URL+'/personal/asha.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(personalData.asha)});
@@ -1522,6 +1527,8 @@ function renderYearNotes() {
 function updateYearNote(id, field, val) {
   var n = yearNotes.find(function(x){return x.id===id;});
   if (n) n[field] = val;
+  clearTimeout(_saveTimer);
+  _saveTimer=setTimeout(saveAll,1500);
 }
 
 // ─────────────────────────────────────────────
@@ -1773,6 +1780,8 @@ function delPersonalNote(who, id) {
 function updatePersonalNote(who, id, field, val) {
   var n = personalData[who].notes.find(function(x){return x.id===id;});
   if (n) n[field] = val;
+  clearTimeout(_saveTimer);
+  _saveTimer=setTimeout(function(){savePersonal(who);},1500);
 }
 
 function renderPersonalPanel(who) {
