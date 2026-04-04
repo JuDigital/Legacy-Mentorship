@@ -1075,30 +1075,88 @@ function downloadFile(id){
 
 
 // SAVE/LOAD
-function saveAll(){
-  localStorage.setItem('legacy_evts',JSON.stringify(calEvts));
-  localStorage.setItem('legacy_notes',JSON.stringify(notes));
-  localStorage.setItem('legacy_yearevts',JSON.stringify(yearEvents));
-  localStorage.setItem('legacy_yearnotes',JSON.stringify(yearNotes));
-  var archMeta=archive.map(function(a){return a.type==='file'?{id:a.id,name:a.name,icon:a.icon,type:'file',fileName:a.fileName,fileSize:a.fileSize,fileData:a.fileData}:a;});
-  try{localStorage.setItem('legacy_archive',JSON.stringify(archMeta));}catch(e){
-    var archLight=archive.map(function(a){return a.type==='file'?{id:a.id,name:a.name,icon:a.icon,type:'file',fileName:a.fileName,fileSize:a.fileSize}:a;});
-    localStorage.setItem('legacy_archive',JSON.stringify(archLight));
+// Uses Firebase Realtime Database for cross-device sync.
+// Ju sets FIREBASE_URL once — mentees never touch anything.
+var FIREBASE_URL = 'https://legacy-mentorship-default-rtdb.firebaseio.com';
+
+function getAllData(){
+  var archMeta=archive.map(function(a){
+    return a.type==='file'?{id:a.id,name:a.name,icon:a.icon,type:'file',fileName:a.fileName,fileSize:a.fileSize}:a;
+  });
+  return {evts:calEvts,notes:notes,yearEvents:yearEvents,yearNotes:yearNotes,archive:archMeta,v:2};
+}
+
+function applyData(d){
+  if(!d||!d.v) return;
+  if(d.evts) calEvts=d.evts;
+  if(d.notes){
+    if(Array.isArray(d.notes)) notes.thismonth=d.notes;
+    else notes=Object.assign({home:[],thismonth:[],reading:[],arch:[]},d.notes);
   }
+  if(d.yearEvents) yearEvents=d.yearEvents;
+  if(d.yearNotes) yearNotes=d.yearNotes;
+  if(d.archive) archive=d.archive;
+}
+
+async function saveAll(){
+  var data=getAllData();
+  // Save locally always
+  try{localStorage.setItem('legacy_local',JSON.stringify(data));}catch(e){}
+  // Push to Firebase
+  try{
+    await fetch(FIREBASE_URL+'/shared.json',{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(data)
+    });
+  }catch(e){}
+  // Also save personal data to Firebase per user
+  try{
+    await fetch(FIREBASE_URL+'/personal/naima.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(personalData.naima)});
+    await fetch(FIREBASE_URL+'/personal/asha.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(personalData.asha)});
+  }catch(e){}
   ['savedMsg','savedMsg2'].forEach(function(id){
     var msg=document.getElementById(id);if(msg){msg.style.display='block';setTimeout(function(){msg.style.display='none';},2000);}
   });
 }
-function loadAll(){
-  try{calEvts=JSON.parse(localStorage.getItem('legacy_evts')||'[]');}catch(e){}
-  try{var n=JSON.parse(localStorage.getItem('legacy_notes')||'{}');
-    if(Array.isArray(n)){notes.thismonth=n;}else{notes=Object.assign({home:[],thismonth:[],reading:[],arch:[]},n);}
+
+async function loadAll(){
+  // Load local first for instant render
+  try{
+    var local=JSON.parse(localStorage.getItem('legacy_local')||'null');
+    if(local) applyData(local);
+    else{
+      try{calEvts=JSON.parse(localStorage.getItem('legacy_evts')||'[]');}catch(e){}
+      try{var n=JSON.parse(localStorage.getItem('legacy_notes')||'{}');
+        if(Array.isArray(n)){notes.thismonth=n;}else{notes=Object.assign({home:[],thismonth:[],reading:[],arch:[]},n);}
+      }catch(e){}
+      try{yearEvents=JSON.parse(localStorage.getItem('legacy_yearevts')||'[]');}catch(e){}
+      try{yearNotes=JSON.parse(localStorage.getItem('legacy_yearnotes')||'[]');}catch(e){}
+      try{archive=JSON.parse(localStorage.getItem('legacy_archive')||'[]');}catch(e){}
+    }
   }catch(e){}
-  try{yearEvents=JSON.parse(localStorage.getItem('legacy_yearevts')||'[]');}catch(e){}
-  try{yearNotes=JSON.parse(localStorage.getItem('legacy_yearnotes')||'[]');}catch(e){}
-  try{archive=JSON.parse(localStorage.getItem('legacy_archive')||'[]');}catch(e){}
   renderEvtList();renderAllNotes();renderArchive();buildYearGrid();renderYearNotes();
   loadPersonal();
+  // Then fetch fresh from Firebase and re-render
+  try{
+    var resp=await fetch(FIREBASE_URL+'/shared.json');
+    if(resp.ok){
+      var d=await resp.json();
+      if(d&&d.v){
+        applyData(d);
+        localStorage.setItem('legacy_local',JSON.stringify(d));
+        renderEvtList();renderAllNotes();renderArchive();buildYearGrid();renderYearNotes();
+      }
+    }
+  }catch(e){}
+  // Load personal from Firebase too
+  try{
+    var rn=await fetch(FIREBASE_URL+'/personal/naima.json');
+    if(rn.ok){var dn=await rn.json();if(dn)personalData.naima=dn;}
+    var ra=await fetch(FIREBASE_URL+'/personal/asha.json');
+    if(ra.ok){var da=await ra.json();if(da)personalData.asha=da;}
+    loadPersonal();
+  }catch(e){}
 }
 
 // READING QUIZ
@@ -1789,8 +1847,15 @@ function makePersonalNoteDraggable(el, who, id){
 }
 
 
-function savePersonal(who) {
+async function savePersonal(who) {
   localStorage.setItem('legacy_personal_' + who, JSON.stringify(personalData[who]));
+  try{
+    await fetch(FIREBASE_URL+'/personal/'+who+'.json',{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(personalData[who])
+    });
+  }catch(e){}
   var msg = document.getElementById(who + 'SavedMsg');
   if (msg) { msg.style.display = 'block'; setTimeout(function(){msg.style.display='none';}, 2000); }
 }
